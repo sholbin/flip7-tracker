@@ -13,7 +13,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #e0f2fe 0%, #e9d5ff 100%);
+            background: #1a1a2e;
             min-height: 100vh;
             padding: 16px;
         }
@@ -24,9 +24,9 @@
         }
         
         .card {
-            background: white;
+            background: #ffffff;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
             padding: 24px;
             margin-bottom: 16px;
         }
@@ -35,91 +35,153 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f5f5f5;
         }
         
         h1 {
             font-size: 24px;
-            color: #1f2937;
+            color: #1a1a2e;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
         
         .reset-btn {
-            background: #ef4444;
+            background: #ff4757;
             color: white;
             border: none;
-            padding: 10px 16px;
+            padding: 10px 18px;
             border-radius: 8px;
             font-size: 14px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
         
         .reset-btn:active {
-            transform: scale(0.95);
-            background: #dc2626;
+            transform: scale(0.96);
+            background: #e84142;
         }
         
         .stats {
-            background: #dbeafe;
+            background: #2e86de;
             border-radius: 12px;
-            padding: 16px;
+            padding: 20px;
             margin-bottom: 20px;
         }
         
         .stats-label {
-            font-size: 14px;
-            color: #6b7280;
+            font-size: 13px;
+            color: rgba(255,255,255,0.85);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .stats-value {
-            font-size: 32px;
-            font-weight: bold;
-            color: #2563eb;
-            margin: 4px 0;
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
+            margin: 8px 0 4px 0;
+            line-height: 1;
         }
         
         .stats-subtitle {
-            font-size: 12px;
-            color: #9ca3af;
+            font-size: 13px;
+            color: rgba(255,255,255,0.75);
+            font-weight: 500;
+        }
+        
+        .top5-container {
+            background: #feca57;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .top5-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .top5-list {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+        
+        .top5-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .top5-rank {
+            font-size: 10px;
+            color: #95a5a6;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .top5-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+            line-height: 1;
+        }
+        
+        .top5-prob {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ff4757;
             margin-top: 4px;
         }
         
         .alert {
-            background: #fed7aa;
-            border: 2px solid #fb923c;
+            background: #feca57;
             border-radius: 12px;
-            padding: 12px;
+            padding: 14px;
             margin-bottom: 20px;
             display: flex;
-            gap: 8px;
+            gap: 12px;
+            align-items: center;
         }
         
         .alert-icon {
-            color: #ea580c;
             font-size: 20px;
             flex-shrink: 0;
         }
         
         .alert-text {
             font-size: 14px;
-            color: #9a3412;
+            color: #1a1a2e;
+            font-weight: 500;
         }
         
         .section {
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
         
         .section-title {
-            font-size: 18px;
+            font-size: 13px;
             font-weight: 600;
-            color: #374151;
+            color: #7f8c8d;
             margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
         }
         
         .grid {
             display: grid;
-            gap: 8px;
+            gap: 10px;
         }
         
         .grid-4 {
@@ -131,88 +193,127 @@
         }
         
         .card-btn {
-            padding: 12px;
-            border-radius: 8px;
-            border: 2px solid;
+            padding: 14px 8px;
+            border-radius: 10px;
+            border: 2px solid #e8e8e8;
             background: white;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s ease;
             text-align: center;
         }
         
         .card-btn:active:not(:disabled) {
-            transform: scale(0.95);
+            transform: scale(0.94);
         }
         
         .card-btn.number {
-            border-color: #60a5fa;
+            background: #f8f9fa;
         }
         
-        .card-btn.number:not(:disabled):hover {
-            background: #eff6ff;
+        .card-btn.number:not(:disabled):active {
+            background: #e9ecef;
+        }
+        
+        .card-btn.number.top5 {
+            background: #feca57;
+            border-color: #feca57;
+        }
+        
+        .card-btn.number.top3 {
+            background: #ff4757;
+            border-color: #ff4757;
+        }
+        
+        .card-btn.number.top1 {
+            background: #2e86de;
+            border-color: #2e86de;
         }
         
         .card-btn.action {
-            border-color: #c084fc;
-            background: #faf5ff;
+            background: #f1f2f6;
         }
         
-        .card-btn.action:not(:disabled):hover {
-            background: #f3e8ff;
+        .card-btn.action:not(:disabled):active {
+            background: #dfe4ea;
         }
         
         .card-btn.bonus {
-            border-color: #4ade80;
-            background: #f0fdf4;
+            background: #f8f9fa;
         }
         
-        .card-btn.bonus:not(:disabled):hover {
-            background: #dcfce7;
+        .card-btn.bonus:not(:disabled):active {
+            background: #e9ecef;
         }
         
         .card-btn:disabled {
-            background: #e5e7eb;
-            border-color: #d1d5db;
-            opacity: 0.5;
+            background: #f5f5f5;
+            border-color: #e8e8e8;
+            opacity: 0.35;
             cursor: not-allowed;
         }
         
         .card-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1f2937;
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a2e;
+            line-height: 1;
+        }
+        
+        .card-btn.top5 .card-number {
+            color: #1a1a2e;
+        }
+        
+        .card-btn.top3 .card-number,
+        .card-btn.top1 .card-number {
+            color: white;
         }
         
         .card-remaining {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 4px;
+            font-size: 11px;
+            color: #95a5a6;
+            margin-top: 6px;
+            font-weight: 600;
+        }
+        
+        .card-btn.top3 .card-remaining,
+        .card-btn.top1 .card-remaining {
+            color: rgba(255,255,255,0.8);
         }
         
         .card-probability {
             font-size: 14px;
-            font-weight: 600;
-            color: #2563eb;
+            font-weight: 700;
+            color: #2e86de;
             margin-top: 4px;
         }
         
+        .card-btn.top5 .card-probability {
+            color: #1a1a2e;
+        }
+        
+        .card-btn.top3 .card-probability,
+        .card-btn.top1 .card-probability {
+            color: white;
+        }
+        
         .card-name {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            color: #1f2937;
+            color: #2c3e50;
         }
         
         .card-name-large {
-            font-size: 14px;
-            font-weight: 600;
-            color: #1f2937;
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
         }
         
         .footer {
             text-align: center;
             font-size: 12px;
-            color: #9ca3af;
-            margin-top: 16px;
+            color: #95a5a6;
+            margin-top: 20px;
+            font-weight: 500;
         }
         
         .hidden {
@@ -225,7 +326,7 @@
         <div class="card">
             <div class="header">
                 <h1>Flip 7 Tracker</h1>
-                <button class="reset-btn" onclick="resetDeck()">↻ Reset</button>
+                <button class="reset-btn" onclick="resetDeck()">Reset</button>
             </div>
             
             <div class="stats">
@@ -234,15 +335,20 @@
                 <div class="stats-subtitle">Deck-Resets: <span id="deckResets">0</span></div>
             </div>
             
+            <div class="top5-container" id="top5Container">
+                <div class="top5-title">Top 5 Wahrscheinlichkeiten</div>
+                <div class="top5-list" id="top5List"></div>
+            </div>
+            
             <div class="alert hidden" id="emptyAlert">
                 <div class="alert-icon">⚠️</div>
                 <div class="alert-text">
-                    <strong>Deck leer!</strong> Drücke den Reset-Button, um mit einem neuen vollständigen Deck fortzufahren.
+                    <strong>Deck leer!</strong> Drücke Reset für ein neues Deck.
                 </div>
             </div>
             
             <div class="section">
-                <div class="section-title">Zahlenkarten (0-12)</div>
+                <div class="section-title">Zahlenkarten</div>
                 <div class="grid grid-4" id="numberCards"></div>
             </div>
             
@@ -289,9 +395,17 @@
             const probs = {};
             for (let i = 0; i <= 12; i++) {
                 const rem = remaining[i] || 0;
-                probs[i] = total > 0 ? (rem / total * 100).toFixed(1) : 0;
+                probs[i] = total > 0 ? (rem / total * 100) : 0;
             }
             return probs;
+        }
+        
+        function getTop5(probs) {
+            const probArray = Object.entries(probs)
+                .filter(([_, prob]) => prob > 0)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            return probArray;
         }
         
         function playCard(card) {
@@ -312,6 +426,7 @@
             const remaining = calculateRemaining();
             const total = calculateTotalRemaining(remaining);
             const probs = calculateProbabilities(remaining, total);
+            const top5 = getTop5(probs);
             
             document.getElementById('totalRemaining').textContent = total;
             document.getElementById('deckResets').textContent = deckResets;
@@ -319,9 +434,27 @@
             const emptyAlert = document.getElementById('emptyAlert');
             if (total === 0) {
                 emptyAlert.classList.remove('hidden');
+                document.getElementById('top5Container').classList.add('hidden');
             } else {
                 emptyAlert.classList.add('hidden');
+                document.getElementById('top5Container').classList.remove('hidden');
             }
+            
+            // Update Top 5 display
+            const top5List = document.getElementById('top5List');
+            top5List.innerHTML = '';
+            top5.forEach(([num, prob], index) => {
+                const item = document.createElement('div');
+                item.className = 'top5-item';
+                item.innerHTML = `
+                    <div class="top5-rank">#${index + 1}</div>
+                    <div class="top5-number">${num}</div>
+                    <div class="top5-prob">${prob.toFixed(1)}%</div>
+                `;
+                top5List.appendChild(item);
+            });
+            
+            const top5Numbers = top5.map(([num]) => parseInt(num));
             
             // Update number cards
             const numberCardsContainer = document.getElementById('numberCards');
@@ -329,14 +462,20 @@
             for (let i = 0; i <= 12; i++) {
                 const rem = remaining[i];
                 const disabled = rem === 0;
+                const prob = probs[i];
+                const rank = top5Numbers.indexOf(i);
+                const isTop1 = rank === 0;
+                const isTop3 = rank >= 0 && rank <= 2;
+                const isTop5 = rank >= 3 && rank <= 4;
+                
                 const btn = document.createElement('button');
-                btn.className = 'card-btn number';
+                btn.className = `card-btn number ${isTop1 ? 'top1' : isTop3 ? 'top3' : isTop5 ? 'top5' : ''}`;
                 btn.disabled = disabled;
                 btn.onclick = () => playCard(i);
                 btn.innerHTML = `
                     <div class="card-number">${i}</div>
                     <div class="card-remaining">${rem}/${initialDeck[i]}</div>
-                    <div class="card-probability">${probs[i]}%</div>
+                    <div class="card-probability">${prob.toFixed(1)}%</div>
                 `;
                 numberCardsContainer.appendChild(btn);
             }
