@@ -1,338 +1,420 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flip 7 Tracker</title>
+
     <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --bg-card-hover: rgba(30, 41, 59, 0.9);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #1a1a2e;
-            min-height: 100vh;
-            padding: 12px;
             -webkit-tap-highlight-color: transparent;
         }
-        
+
+        body {
+            font-family: var(--font-family);
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px 16px;
+            overflow-x: hidden;
+        }
+
         .container {
-            max-width: 480px;
+            max-width: 500px;
             margin: 0 auto;
+            padding-bottom: 40px;
         }
-        
-        .card {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-            padding: 20px;
-            margin-bottom: 12px;
-        }
-        
+
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 14px;
-            border-bottom: 2px solid #f5f5f5;
-        }
-        
-        h1 {
-            font-size: 22px;
-            color: #1a1a2e;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-        
-        .reset-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            min-height: 44px;
-            min-width: 44px;
-        }
-        
-        .reset-btn:active {
-            transform: scale(0.96);
-            background: #e84142;
-        }
-        
-        .stats {
-            background: #2e86de;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 16px;
-        }
-        
-        .stats-label {
-            font-size: 12px;
-            color: rgba(255,255,255,0.85);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .stats-value {
-            font-size: 42px;
-            font-weight: 700;
-            color: white;
-            margin: 6px 0 4px 0;
-            line-height: 1;
-        }
-        
-        .stats-subtitle {
-            font-size: 12px;
-            color: rgba(255,255,255,0.75);
-            font-weight: 500;
-        }
-        
-        .top5-container {
-            background: #feca57;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-        
-        .top5-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: #1a1a2e;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .top5-list {
-            display: flex;
-            gap: 8px;
-            justify-content: space-between;
-        }
-        
-        .top5-item {
-            background: white;
-            padding: 10px 6px;
-            border-radius: 8px;
-            text-align: center;
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .top5-rank {
-            font-size: 9px;
-            color: #95a5a6;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        
-        .top5-number {
-            font-size: 22px;
-            font-weight: 700;
-            color: #1a1a2e;
-            line-height: 1;
-        }
-        
-        .top5-prob {
-            font-size: 12px;
-            font-weight: 600;
-            color: #ff4757;
-            margin-top: 4px;
-        }
-        
-        .alert {
-            background: #feca57;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 16px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .alert-icon {
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        
-        .alert-text {
-            font-size: 13px;
-            color: #1a1a2e;
-            font-weight: 500;
-        }
-        
-        .section {
             margin-bottom: 24px;
+            padding: 0 4px;
         }
-        
-        .section-title {
-            font-size: 12px;
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .reset-btn {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 600;
-            color: #7f8c8d;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(8px);
         }
-        
+
+        .reset-btn:hover {
+            background: rgba(239, 68, 68, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .reset-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Stats Card */
+        .stats {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+
+        .stats-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .stats-value {
+            font-size: 56px;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .stats-subtitle {
+            margin-top: 8px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            background: rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* Top 5 Section */
+        .top5-container {
+            margin-bottom: 28px;
+        }
+
+        .top5-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            padding-left: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top5-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--glass-border), transparent);
+        }
+
+        .top5-list {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .top5-item {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            padding: 12px 4px;
+            border-radius: 16px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s ease;
+        }
+
+        .top5-item:hover {
+            transform: translateY(-2px);
+            background: var(--bg-card-hover);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .top5-rank {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-bottom: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+
+        .top5-number {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 4px 0;
+        }
+
+        .top5-prob {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        /* Sections & Grid */
+        .section {
+            margin-bottom: 32px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            padding-left: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--glass-border), transparent);
+        }
+
         .grid {
             display: grid;
-            gap: 8px;
+            gap: 10px;
         }
-        
+
         .grid-4 {
             grid-template-columns: repeat(4, 1fr);
         }
-        
+
         .grid-3 {
             grid-template-columns: repeat(3, 1fr);
         }
-        
+
+        /* Card Buttons */
         .card-btn {
-            padding: 10px 6px;
-            border-radius: 8px;
-            border: 2px solid #e8e8e8;
-            background: white;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 12px 8px;
             cursor: pointer;
-            transition: all 0.15s ease;
-            text-align: center;
-            min-height: 48px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            touch-action: manipulation;
+            justify-content: center;
+            min-height: 72px;
+            position: relative;
+            overflow: hidden;
+            user-select: none;
         }
-        
+
+        .card-btn:hover:not(:disabled) {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
         .card-btn:active:not(:disabled) {
-            transform: scale(0.94);
+            transform: scale(0.96);
         }
-        
-        .card-btn.number {
-            background: #f8f9fa;
-        }
-        
-        .card-btn.number:not(:disabled):active {
-            background: #e9ecef;
-        }
-        
-        .card-btn.number.top5 {
-            background: #feca57;
-            border-color: #feca57;
-        }
-        
-        .card-btn.number.top3 {
-            background: #ff4757;
-            border-color: #ff4757;
-        }
-        
-        .card-btn.number.top1 {
-            background: #2e86de;
-            border-color: #2e86de;
-        }
-        
-        .card-btn.action {
-            background: #f1f2f6;
-            min-height: 52px;
-        }
-        
-        .card-btn.action:not(:disabled):active {
-            background: #dfe4ea;
-        }
-        
-        .card-btn.bonus {
-            background: #f8f9fa;
-            min-height: 52px;
-        }
-        
-        .card-btn.bonus:not(:disabled):active {
-            background: #e9ecef;
-        }
-        
+
         .card-btn:disabled {
-            background: #f5f5f5;
-            border-color: #e8e8e8;
-            opacity: 0.35;
+            opacity: 0.3;
             cursor: not-allowed;
+            background: rgba(15, 23, 42, 0.5);
+            border-color: transparent;
         }
-        
+
+        /* Number Cards Specifics */
         .card-number {
-            font-size: 22px;
-            font-weight: 700;
-            color: #1a1a2e;
-            line-height: 1;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color 0.2s;
         }
-        
-        .card-btn.top5 .card-number {
-            color: #1a1a2e;
-        }
-        
-        .card-btn.top3 .card-number,
-        .card-btn.top1 .card-number {
-            color: white;
-        }
-        
+
         .card-remaining {
-            font-size: 10px;
-            color: #95a5a6;
-            margin-top: 4px;
-            font-weight: 600;
-        }
-        
-        .card-btn.top3 .card-remaining,
-        .card-btn.top1 .card-remaining {
-            color: rgba(255,255,255,0.8);
-        }
-        
-        .card-probability {
-            font-size: 12px;
-            font-weight: 700;
-            color: #2e86de;
-            margin-top: 3px;
-        }
-        
-        .card-btn.top5 .card-probability {
-            color: #1a1a2e;
-        }
-        
-        .card-btn.top3 .card-probability,
-        .card-btn.top1 .card-probability {
-            color: white;
-        }
-        
-        .card-name {
-            font-size: 10px;
-            font-weight: 600;
-            color: #2c3e50;
-            line-height: 1.2;
-        }
-        
-        .card-name-large {
-            font-size: 15px;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-        
-        .footer {
-            text-align: center;
             font-size: 11px;
-            color: #95a5a6;
-            margin-top: 16px;
+            color: var(--text-secondary);
             font-weight: 500;
         }
-        
+
+        .card-probability {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+            padding: 2px 6px;
+            border-radius: 6px;
+            margin-top: 6px;
+            transition: all 0.2s;
+        }
+
+        /* Top Rankings Styling */
+        .card-btn.top1 {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.1));
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .card-btn.top3 {
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .card-btn.top1 .card-probability {
+            background: var(--accent-blue);
+            color: white;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Action & Bonus Cards */
+        .card-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .card-name-large {
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Action Card Colors */
+        .card-btn.action {
+            min-height: 64px;
+        }
+
+        .card-btn.bonus {
+            min-height: 64px;
+        }
+
+        /* Alert Box */
+        .alert {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .alert-icon {
+            font-size: 20px;
+        }
+
+        .alert-text {
+            font-size: 14px;
+            color: #fcd34d;
+            font-weight: 500;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+            opacity: 0.6;
+            margin-top: 40px;
+        }
+
         .hidden {
-            display: none;
+            display: none !important;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 380px) {
+            .grid-4 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .stats-value {
+                font-size: 48px;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="card">
@@ -340,40 +422,40 @@
                 <h1>Flip 7 Tracker</h1>
                 <button class="reset-btn" onclick="resetDeck()">Reset</button>
             </div>
-            
+
             <div class="stats">
                 <div class="stats-label">Verbleibende Karten</div>
                 <div class="stats-value" id="totalRemaining">79</div>
                 <div class="stats-subtitle">Deck-Resets: <span id="deckResets">0</span></div>
             </div>
-            
+
             <div class="top5-container" id="top5Container">
                 <div class="top5-title">Top 5 Wahrscheinlichkeiten</div>
                 <div class="top5-list" id="top5List"></div>
             </div>
-            
+
             <div class="alert hidden" id="emptyAlert">
                 <div class="alert-icon">⚠️</div>
                 <div class="alert-text">
                     <strong>Deck leer!</strong> Drücke Reset für ein neues Deck.
                 </div>
             </div>
-            
+
             <div class="section">
                 <div class="section-title">Zahlenkarten</div>
                 <div class="grid grid-4" id="numberCards"></div>
             </div>
-            
+
             <div class="section">
                 <div class="section-title">Aktionskarten</div>
                 <div class="grid grid-3" id="actionCards"></div>
             </div>
-            
+
             <div class="section">
                 <div class="section-title">Bonuskarten</div>
                 <div class="grid grid-3" id="bonusCards"></div>
             </div>
-            
+
             <div class="footer">
                 Tippe auf eine Karte, wenn sie ausgespielt wurde
             </div>
@@ -387,10 +469,10 @@
             'Freeze': 3, 'Second Chance': 3, 'Flip Three': 3,
             '×2': 2, '+2': 2, '+4': 2, '+6': 2, '+8': 2, '+10': 2
         };
-        
+
         let played = {};
         let deckResets = 0;
-        
+
         function calculateRemaining() {
             const remaining = {};
             Object.keys(initialDeck).forEach(card => {
@@ -398,11 +480,11 @@
             });
             return remaining;
         }
-        
+
         function calculateTotalRemaining(remaining) {
             return Object.values(remaining).reduce((sum, count) => sum + count, 0);
         }
-        
+
         function calculateProbabilities(remaining, total) {
             const probs = {};
             for (let i = 0; i <= 12; i++) {
@@ -411,7 +493,7 @@
             }
             return probs;
         }
-        
+
         function getTop5(probs) {
             const probArray = Object.entries(probs)
                 .filter(([_, prob]) => prob > 0)
@@ -419,7 +501,7 @@
                 .slice(0, 5);
             return probArray;
         }
-        
+
         function playCard(card) {
             const remaining = calculateRemaining();
             if (remaining[card] > 0) {
@@ -427,22 +509,22 @@
                 updateUI();
             }
         }
-        
+
         function resetDeck() {
             played = {};
             deckResets++;
             updateUI();
         }
-        
+
         function updateUI() {
             const remaining = calculateRemaining();
             const total = calculateTotalRemaining(remaining);
             const probs = calculateProbabilities(remaining, total);
             const top5 = getTop5(probs);
-            
+
             document.getElementById('totalRemaining').textContent = total;
             document.getElementById('deckResets').textContent = deckResets;
-            
+
             const emptyAlert = document.getElementById('emptyAlert');
             if (total === 0) {
                 emptyAlert.classList.remove('hidden');
@@ -451,7 +533,7 @@
                 emptyAlert.classList.add('hidden');
                 document.getElementById('top5Container').classList.remove('hidden');
             }
-            
+
             // Update Top 5 display
             const top5List = document.getElementById('top5List');
             top5List.innerHTML = '';
@@ -465,9 +547,9 @@
                 `;
                 top5List.appendChild(item);
             });
-            
+
             const top5Numbers = top5.map(([num]) => parseInt(num));
-            
+
             // Update number cards - JETZT VON 12 BIS 0 SORTIERT
             const numberCardsContainer = document.getElementById('numberCards');
             numberCardsContainer.innerHTML = '';
@@ -479,7 +561,7 @@
                 const isTop1 = rank === 0;
                 const isTop3 = rank >= 0 && rank <= 2;
                 const isTop5 = rank >= 3 && rank <= 4;
-                
+
                 const btn = document.createElement('button');
                 btn.className = `card-btn number ${isTop1 ? 'top1' : isTop3 ? 'top3' : isTop5 ? 'top5' : ''}`;
                 btn.disabled = disabled;
@@ -491,7 +573,7 @@
                 `;
                 numberCardsContainer.appendChild(btn);
             }
-            
+
             // Update action cards
             const actionCards = [
                 ['Freeze', 'Freeze'],
@@ -513,7 +595,7 @@
                 `;
                 actionCardsContainer.appendChild(btn);
             });
-            
+
             // Update bonus cards
             const bonusCards = ['×2', '+2', '+4', '+6', '+8', '+10'];
             const bonusCardsContainer = document.getElementById('bonusCards');
@@ -532,9 +614,10 @@
                 bonusCardsContainer.appendChild(btn);
             });
         }
-        
+
         // Initial render
         updateUI();
     </script>
 </body>
+
 </html>
