@@ -735,8 +735,142 @@
             border-color: rgba(139, 92, 246, 0.2);
         }
     </style>
-    <!-- Tesseract.js CDN -->
-    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+    <!-- TensorFlow.js Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/knn-classifier"></script>
+    <style>
+        /* Camera & Training UI */
+        #cameraOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #cameraVideo {
+            width: 100%;
+            height: 60%;
+            object-fit: cover;
+        }
+
+        .vision-controls {
+            flex: 1;
+            background: var(--bg-root);
+            padding: 20px;
+            overflow-y: auto;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        /* Training Mode Toggle */
+        .mode-switch {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: var(--glass-base);
+            padding: 4px;
+            border-radius: 12px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: var(--glass-highlight);
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Training Controls */
+        .train-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .train-btn {
+            background: var(--glass-base);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 10px 4px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .train-btn.has-data {
+            border-color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+        }
+
+        .train-count {
+            font-size: 9px;
+            opacity: 0.7;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .camera-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent);
+        }
+
+        .prediction-pill {
+            background: rgba(16, 185, 129, 0.9);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .prediction-pill.show {
+            opacity: 1;
+        }
+
+        .close-cam {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -825,24 +959,41 @@
             um sie zu entfernen </div>
     </div>
 
-    <!-- Camera Overlay DOM -->
+    <!-- Vision Overlay -->
     <div id="cameraOverlay" class="hidden">
-        <video id="cameraVideo" playsinline autoplay muted></video>
-        <div class="scan-region">
-            <div class="scan-line"></div>
+        <div class="camera-header">
+            <div id="predictionLabel" class="prediction-pill">Detecting...</div>
+            <button class="close-cam" onclick="toggleCamera()">✕</button>
         </div>
-        <div id="scanStatus">
-            <div class="spinner"
-                style="width:10px;height:10px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite">
-            </div>
-            Scanning...
-        </div>
-        <div class="camera-controls">
-            <button class="btn-camera-close" onclick="toggleCamera()">Schließen</button>
-        </div>
-        <canvas id="cameraCanvas" style="display:none;"></canvas>
-    </div>
 
+        <video id="cameraVideo" playsinline autoplay muted></video>
+
+        <div class="vision-controls">
+            <div class="mode-switch">
+                <button class="mode-btn active" id="btnModePlay" onclick="setVisionMode('play')">Play Mode</button>
+                <button class="mode-btn" id="btnModeTrain" onclick="setVisionMode('train')">Training Mode</button>
+            </div>
+
+            <div id="trainPanel" class="hidden">
+                <div style="margin-bottom:12px; font-size:12px; color:var(--text-muted); text-align:center;">
+                    Tap a button to learn that card (3-5 angles recommended).
+                </div>
+                <div class="train-grid" id="trainGrid">
+                    <!-- Populated by JS -->
+                </div>
+                <button onclick="clearTraining()"
+                    style="width:100%; margin-top:20px; padding:12px; background:var(--glass-base); border:1px solid var(--accent-red); color:var(--accent-red); border-radius:8px;">
+                    Reset Training Data
+                </button>
+            </div>
+
+            <div id="playPanel" style="text-align:center; color:var(--text-muted); font-size:13px; margin-top:20px;">
+                Point at a card. The app will auto-play recognized cards.<br>
+                <strong style="color:var(--text-primary)">Ensure you trained the cards first!</strong>
+            </div>
+        </div>
+    </div>
+    <canvas id="cameraCanvas" style="display:none;"></canvas>
     <style>
         @keyframes spin {
             to {
@@ -855,7 +1006,7 @@
             0: 1, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6,
             7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12,
             'Freeze': 3, 'Second Chance': 3, 'Flip Three': 3,
-            '×2': 2, '+2': 2, '+4': 2, '+6': 2, '+8': 2, '+10': 2
+            '×2': 1, '+2': 1, '+4': 1, '+6': 1, '+8': 1, '+10': 1
         };
 
         let played = {};
@@ -866,11 +1017,11 @@
 
         // Camera State
         let isCameraActive = false;
-        let scanInterval = null;
-        let isScanning = false;
+        let scanInterval = null; // No longer used for OCR interval
+        let isScanning = false; // No longer used for OCR scanning state
         const videoEl = document.getElementById('cameraVideo');
         const canvasEl = document.getElementById('cameraCanvas');
-        const statusEl = document.getElementById('scanStatus');
+        const statusEl = document.getElementById('scanStatus'); // This element is removed from HTML, but variable remains. Can be removed.
 
         function calculateRemaining() {
             const remaining = {};
@@ -1151,20 +1302,100 @@
             });
         }
 
-        // Camera Logic
+        // --- Vision / AI Logic --- 
+        let net;
+        let classifier;
+        let isVisionLoaded = false;
+        let visionMode = 'play'; // 'play' or 'train'
+        let trainCounts = {}; // Track samples per class
+
+        async function loadVision() {
+            if (isVisionLoaded) return;
+            try {
+                console.log("Loading MobileNet...");
+                net = await mobilenet.load();
+                classifier = knnClassifier.create();
+                isVisionLoaded = true;
+                console.log("Vision Ready");
+                renderTrainGrid();
+            } catch (e) {
+                console.error("TFJS Load Error", e);
+            }
+        }
+
+        const cardClasses = [
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12',
+            'Freeze', 'Second Chance', 'Flip Three',
+            '×2', '+2', '+4', '+6', '+8', '+10'
+        ];
+
+        function renderTrainGrid() {
+            const grid = document.getElementById('trainGrid');
+            grid.innerHTML = '';
+
+            cardClasses.forEach(id => {
+                const count = trainCounts[id] || 0;
+                const btn = document.createElement('button');
+                btn.className = `train-btn ${count > 0 ? 'has-data' : ''}`;
+                btn.onclick = () => addExample(id);
+                btn.innerHTML = `
+                    <span>${id}</span>
+                    <span class="train-count">${count} samples</span>
+                `;
+                grid.appendChild(btn);
+            });
+        }
+
+        function setVisionMode(mode) {
+            visionMode = mode;
+            document.getElementById('btnModePlay').className = `mode-btn ${mode === 'play' ? 'active' : ''}`;
+            document.getElementById('btnModeTrain').className = `mode-btn ${mode === 'train' ? 'active' : ''}`;
+
+            if (mode === 'train') {
+                document.getElementById('trainPanel').classList.remove('hidden');
+                document.getElementById('playPanel').classList.add('hidden');
+            } else {
+                document.getElementById('trainPanel').classList.add('hidden');
+                document.getElementById('playPanel').classList.remove('hidden');
+            }
+        }
+
+        async function addExample(classId) {
+            if (!isVisionLoaded) return;
+
+            // Capture activation
+            const activation = net.infer(videoEl, true);
+            classifier.addExample(activation, classId);
+
+            // Update Count
+            trainCounts[classId] = (trainCounts[classId] || 0) + 1;
+            renderTrainGrid();
+
+            // Feedback
+            if (navigator.vibrate) navigator.vibrate(20);
+        }
+
+        function clearTraining() {
+            if (confirm("Reset ALL training data?")) {
+                classifier.clearAllClasses();
+                trainCounts = {};
+                renderTrainGrid();
+            }
+        }
+
         async function toggleCamera() {
             const overlay = document.getElementById('cameraOverlay');
             if (isCameraActive) {
-                // Stop Camera
+                // Stop
                 isCameraActive = false;
                 overlay.classList.add('hidden');
-
                 if (videoEl.srcObject) {
                     videoEl.srcObject.getTracks().forEach(track => track.stop());
                 }
-                clearInterval(scanInterval);
+                // No clearInterval for visionLoop as it's requestAnimationFrame based
             } else {
-                // Start Camera
+                // Start
+                await loadVision();
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: { facingMode: 'environment' }
@@ -1173,88 +1404,46 @@
                     isCameraActive = true;
                     overlay.classList.remove('hidden');
 
-                    // Start scanning loop
-                    scanInterval = setInterval(processFrame, 1000); // Scan every second
+                    // Start Loop
+                    requestAnimationFrame(visionLoop);
                 } catch (err) {
-                    alert("Kamera Zugriff verweigert oder nicht verfügbar.");
-                    console.error(err);
+                    alert("Camera Error: " + err.message);
                 }
             }
         }
 
-        async function processFrame() {
-            if (!isCameraActive || isScanning) return;
+        async function visionLoop() {
+            if (!isCameraActive) return;
 
-            isScanning = true;
-            statusEl.innerHTML = '<div class="spinner" style="width:10px;height:10px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite"></div> Analyzing...';
+            if (isVisionLoaded && visionMode === 'play' && classifier.getNumClasses() > 0) {
+                try {
+                    const activation = net.infer(videoEl, true);
+                    const result = await classifier.predictClass(activation);
 
-            try {
-                // Draw current frame to canvas
-                const ctx = canvasEl.getContext('2d');
-                canvasEl.width = videoEl.videoWidth;
-                canvasEl.height = videoEl.videoHeight;
-                ctx.drawImage(videoEl, 0, 0, canvasEl.width, canvasEl.height);
+                    // Threshold handling
+                    if (result.confidences[result.label] > 0.9) { // 90% confidence
+                        const label = result.label;
+                        const pill = document.getElementById('predictionLabel');
 
-                // OCR
-                const result = await Tesseract.recognize(
-                    canvasEl,
-                    'eng',
-                    // { logger: m => console.log(m) }
-                );
+                        pill.innerText = `Found: ${label}`;
+                        pill.classList.add('show');
 
-                const text = result.data.text.toUpperCase();
-                console.log("OCR Detected:", text);
+                        // Cooldown to avoid machine gunning cards
+                        if (!window.lastScan || Date.now() - window.lastScan > 2000) {
+                            window.lastScan = Date.now();
+                            if (navigator.vibrate) navigator.vibrate(50);
+                            playCard(label);
+                        }
 
-                // Basic matching logic
-                const match = findCardMatch(text);
-
-                if (match !== null) {
-                    statusEl.innerText = `Found: ${match}!`;
-                    statusEl.style.color = '#10b981';
-
-                    if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
-
-                    // Play card
-                    playCard(match);
-
-                    // Small delay to prevent double scanning
-                    await new Promise(r => setTimeout(r, 2000));
-                } else {
-                    statusEl.style.color = '#fff';
-                    statusEl.innerText = 'Scanning...';
+                        setTimeout(() => pill.classList.remove('show'), 1000);
+                    }
+                } catch (e) {
+                    // console.log("Prediction error (likely no classes yet)", e);
                 }
-
-            } catch (err) {
-                console.error("OCR Error", err);
-            } finally {
-                isScanning = false;
-            }
-        }
-
-        function findCardMatch(text) {
-            // Clean text
-            const clean = text.replace(/[^A-Z0-9\+\-\*]/g, ' ');
-
-            // Check numbers 0-12
-            // Look for isolated numbers or clear patterns
-            const numbers = clean.match(/\b([0-9]|1[0-2])\b/);
-            if (numbers) {
-                return parseInt(numbers[0]);
             }
 
-            // Check Actions/Bonus
-            if (clean.includes("FREEZE")) return 'Freeze';
-            if (clean.includes("SECOND") || clean.includes("CHANCE")) return 'Second Chance';
-            if (clean.includes("FLIP") || clean.includes("THREE") || clean.includes("3 CARDS")) return 'Flip Three';
-
-            if (clean.includes("X2") || clean.includes("*2")) return '×2';
-            if (clean.includes("+2")) return '+2';
-            if (clean.includes("+4")) return '+4';
-            if (clean.includes("+6")) return '+6';
-            if (clean.includes("+8")) return '+8';
-            if (clean.includes("+10")) return '+10';
-
-            return null;
+            await new Promise(r => setTimeout(r, 200)); // 5 FPS
+            requestAnimationFrame(visionLoop);
         }
 
         // Initial render
