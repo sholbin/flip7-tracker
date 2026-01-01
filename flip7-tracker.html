@@ -15,7 +15,8 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #1a1a2e;
             min-height: 100vh;
-            padding: 16px;
+            padding: 12px;
+            -webkit-tap-highlight-color: transparent;
         }
         
         .container {
@@ -27,21 +28,21 @@
             background: #ffffff;
             border-radius: 16px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-            padding: 24px;
-            margin-bottom: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
         }
         
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
             border-bottom: 2px solid #f5f5f5;
         }
         
         h1 {
-            font-size: 24px;
+            font-size: 22px;
             color: #1a1a2e;
             font-weight: 700;
             letter-spacing: -0.5px;
@@ -51,12 +52,14 @@
             background: #ff4757;
             color: white;
             border: none;
-            padding: 10px 18px;
+            padding: 10px 16px;
             border-radius: 8px;
             font-size: 14px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.2s ease;
+            min-height: 44px;
+            min-width: 44px;
         }
         
         .reset-btn:active {
@@ -67,12 +70,12 @@
         .stats {
             background: #2e86de;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 18px;
+            margin-bottom: 16px;
         }
         
         .stats-label {
-            font-size: 13px;
+            font-size: 12px;
             color: rgba(255,255,255,0.85);
             font-weight: 500;
             text-transform: uppercase;
@@ -80,15 +83,15 @@
         }
         
         .stats-value {
-            font-size: 48px;
+            font-size: 42px;
             font-weight: 700;
             color: white;
-            margin: 8px 0 4px 0;
+            margin: 6px 0 4px 0;
             line-height: 1;
         }
         
         .stats-subtitle {
-            font-size: 13px;
+            font-size: 12px;
             color: rgba(255,255,255,0.75);
             font-weight: 500;
         }
@@ -96,28 +99,28 @@
         .top5-container {
             background: #feca57;
             border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 20px;
+            padding: 16px;
+            margin-bottom: 16px;
         }
         
         .top5-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: #1a1a2e;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         
         .top5-list {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: space-between;
         }
         
         .top5-item {
             background: white;
-            padding: 12px;
+            padding: 10px 6px;
             border-radius: 8px;
             text-align: center;
             flex: 1;
@@ -125,21 +128,21 @@
         }
         
         .top5-rank {
-            font-size: 10px;
+            font-size: 9px;
             color: #95a5a6;
             font-weight: 600;
             margin-bottom: 4px;
         }
         
         .top5-number {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             color: #1a1a2e;
             line-height: 1;
         }
         
         .top5-prob {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: #ff4757;
             margin-top: 4px;
@@ -148,40 +151,40 @@
         .alert {
             background: #feca57;
             border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 20px;
+            padding: 12px;
+            margin-bottom: 16px;
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
         }
         
         .alert-icon {
-            font-size: 20px;
+            font-size: 18px;
             flex-shrink: 0;
         }
         
         .alert-text {
-            font-size: 14px;
+            font-size: 13px;
             color: #1a1a2e;
             font-weight: 500;
         }
         
         .section {
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
         
         .section-title {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: #7f8c8d;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 0.8px;
         }
         
         .grid {
             display: grid;
-            gap: 10px;
+            gap: 8px;
         }
         
         .grid-4 {
@@ -193,13 +196,19 @@
         }
         
         .card-btn {
-            padding: 14px 8px;
-            border-radius: 10px;
+            padding: 10px 6px;
+            border-radius: 8px;
             border: 2px solid #e8e8e8;
             background: white;
             cursor: pointer;
             transition: all 0.15s ease;
             text-align: center;
+            min-height: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            touch-action: manipulation;
         }
         
         .card-btn:active:not(:disabled) {
@@ -231,6 +240,7 @@
         
         .card-btn.action {
             background: #f1f2f6;
+            min-height: 52px;
         }
         
         .card-btn.action:not(:disabled):active {
@@ -239,6 +249,7 @@
         
         .card-btn.bonus {
             background: #f8f9fa;
+            min-height: 52px;
         }
         
         .card-btn.bonus:not(:disabled):active {
@@ -253,7 +264,7 @@
         }
         
         .card-number {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: 700;
             color: #1a1a2e;
             line-height: 1;
@@ -269,9 +280,9 @@
         }
         
         .card-remaining {
-            font-size: 11px;
+            font-size: 10px;
             color: #95a5a6;
-            margin-top: 6px;
+            margin-top: 4px;
             font-weight: 600;
         }
         
@@ -281,10 +292,10 @@
         }
         
         .card-probability {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
             color: #2e86de;
-            margin-top: 4px;
+            margin-top: 3px;
         }
         
         .card-btn.top5 .card-probability {
@@ -297,22 +308,23 @@
         }
         
         .card-name {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             color: #2c3e50;
+            line-height: 1.2;
         }
         
         .card-name-large {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             color: #2c3e50;
         }
         
         .footer {
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             color: #95a5a6;
-            margin-top: 20px;
+            margin-top: 16px;
             font-weight: 500;
         }
         
@@ -456,10 +468,10 @@
             
             const top5Numbers = top5.map(([num]) => parseInt(num));
             
-            // Update number cards
+            // Update number cards - JETZT VON 12 BIS 0 SORTIERT
             const numberCardsContainer = document.getElementById('numberCards');
             numberCardsContainer.innerHTML = '';
-            for (let i = 0; i <= 12; i++) {
+            for (let i = 12; i >= 0; i--) {  // VON 12 RUNTER BIS 0
                 const rem = remaining[i];
                 const disabled = rem === 0;
                 const prob = probs[i];
