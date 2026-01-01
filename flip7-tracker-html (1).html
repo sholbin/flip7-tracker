@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flip 7 Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #e9d5ff 100%);
+            min-height: 100vh;
+            padding: 16px;
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            color: #1f2937;
+        }
+        
+        .reset-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .reset-btn:active {
+            transform: scale(0.95);
+            background: #dc2626;
+        }
+        
+        .stats {
+            background: #dbeafe;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .stats-label {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .stats-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2563eb;
+            margin: 4px 0;
+        }
+        
+        .stats-subtitle {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+        
+        .alert {
+            background: #fed7aa;
+            border: 2px solid #fb923c;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .alert-icon {
+            color: #ea580c;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .alert-text {
+            font-size: 14px;
+            color: #9a3412;
+        }
+        
+        .section {
+            margin-bottom: 24px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+        
+        .grid {
+            display: grid;
+            gap: 8px;
+        }
+        
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .card-btn {
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .card-btn:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+        
+        .card-btn.number {
+            border-color: #60a5fa;
+        }
+        
+        .card-btn.number:not(:disabled):hover {
+            background: #eff6ff;
+        }
+        
+        .card-btn.action {
+            border-color: #c084fc;
+            background: #faf5ff;
+        }
+        
+        .card-btn.action:not(:disabled):hover {
+            background: #f3e8ff;
+        }
+        
+        .card-btn.bonus {
+            border-color: #4ade80;
+            background: #f0fdf4;
+        }
+        
+        .card-btn.bonus:not(:disabled):hover {
+            background: #dcfce7;
+        }
+        
+        .card-btn:disabled {
+            background: #e5e7eb;
+            border-color: #d1d5db;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .card-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        .card-remaining {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        
+        .card-probability {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2563eb;
+            margin-top: 4px;
+        }
+        
+        .card-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .card-name-large {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 16px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>Flip 7 Tracker</h1>
+                <button class="reset-btn" onclick="resetDeck()">↻ Reset</button>
+            </div>
+            
+            <div class="stats">
+                <div class="stats-label">Verbleibende Karten</div>
+                <div class="stats-value" id="totalRemaining">79</div>
+                <div class="stats-subtitle">Deck-Resets: <span id="deckResets">0</span></div>
+            </div>
+            
+            <div class="alert hidden" id="emptyAlert">
+                <div class="alert-icon">⚠️</div>
+                <div class="alert-text">
+                    <strong>Deck leer!</strong> Drücke den Reset-Button, um mit einem neuen vollständigen Deck fortzufahren.
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Zahlenkarten (0-12)</div>
+                <div class="grid grid-4" id="numberCards"></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Aktionskarten</div>
+                <div class="grid grid-3" id="actionCards"></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Bonuskarten</div>
+                <div class="grid grid-3" id="bonusCards"></div>
+            </div>
+            
+            <div class="footer">
+                Tippe auf eine Karte, wenn sie ausgespielt wurde
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const initialDeck = {
+            0: 1, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6,
+            7: 7, 8: 8, 9: 9, 10: 10, 11: 11, 12: 12,
+            'Freeze': 3, 'Second Chance': 3, 'Flip Three': 3,
+            '×2': 2, '+2': 2, '+4': 2, '+6': 2, '+8': 2, '+10': 2
+        };
+        
+        let played = {};
+        let deckResets = 0;
+        
+        function calculateRemaining() {
+            const remaining = {};
+            Object.keys(initialDeck).forEach(card => {
+                remaining[card] = initialDeck[card] - (played[card] || 0);
+            });
+            return remaining;
+        }
+        
+        function calculateTotalRemaining(remaining) {
+            return Object.values(remaining).reduce((sum, count) => sum + count, 0);
+        }
+        
+        function calculateProbabilities(remaining, total) {
+            const probs = {};
+            for (let i = 0; i <= 12; i++) {
+                const rem = remaining[i] || 0;
+                probs[i] = total > 0 ? (rem / total * 100).toFixed(1) : 0;
+            }
+            return probs;
+        }
+        
+        function playCard(card) {
+            const remaining = calculateRemaining();
+            if (remaining[card] > 0) {
+                played[card] = (played[card] || 0) + 1;
+                updateUI();
+            }
+        }
+        
+        function resetDeck() {
+            played = {};
+            deckResets++;
+            updateUI();
+        }
+        
+        function updateUI() {
+            const remaining = calculateRemaining();
+            const total = calculateTotalRemaining(remaining);
+            const probs = calculateProbabilities(remaining, total);
+            
+            document.getElementById('totalRemaining').textContent = total;
+            document.getElementById('deckResets').textContent = deckResets;
+            
+            const emptyAlert = document.getElementById('emptyAlert');
+            if (total === 0) {
+                emptyAlert.classList.remove('hidden');
+            } else {
+                emptyAlert.classList.add('hidden');
+            }
+            
+            // Update number cards
+            const numberCardsContainer = document.getElementById('numberCards');
+            numberCardsContainer.innerHTML = '';
+            for (let i = 0; i <= 12; i++) {
+                const rem = remaining[i];
+                const disabled = rem === 0;
+                const btn = document.createElement('button');
+                btn.className = 'card-btn number';
+                btn.disabled = disabled;
+                btn.onclick = () => playCard(i);
+                btn.innerHTML = `
+                    <div class="card-number">${i}</div>
+                    <div class="card-remaining">${rem}/${initialDeck[i]}</div>
+                    <div class="card-probability">${probs[i]}%</div>
+                `;
+                numberCardsContainer.appendChild(btn);
+            }
+            
+            // Update action cards
+            const actionCards = [
+                ['Freeze', 'Freeze'],
+                ['Second Chance', '2nd Chance'],
+                ['Flip Three', 'Flip 3']
+            ];
+            const actionCardsContainer = document.getElementById('actionCards');
+            actionCardsContainer.innerHTML = '';
+            actionCards.forEach(([key, display]) => {
+                const rem = remaining[key];
+                const disabled = rem === 0;
+                const btn = document.createElement('button');
+                btn.className = 'card-btn action';
+                btn.disabled = disabled;
+                btn.onclick = () => playCard(key);
+                btn.innerHTML = `
+                    <div class="card-name">${display}</div>
+                    <div class="card-remaining">${rem}/${initialDeck[key]}</div>
+                `;
+                actionCardsContainer.appendChild(btn);
+            });
+            
+            // Update bonus cards
+            const bonusCards = ['×2', '+2', '+4', '+6', '+8', '+10'];
+            const bonusCardsContainer = document.getElementById('bonusCards');
+            bonusCardsContainer.innerHTML = '';
+            bonusCards.forEach(card => {
+                const rem = remaining[card];
+                const disabled = rem === 0;
+                const btn = document.createElement('button');
+                btn.className = 'card-btn bonus';
+                btn.disabled = disabled;
+                btn.onclick = () => playCard(card);
+                btn.innerHTML = `
+                    <div class="card-name-large">${card}</div>
+                    <div class="card-remaining">${rem}/${initialDeck[card]}</div>
+                `;
+                bonusCardsContainer.appendChild(btn);
+            });
+        }
+        
+        // Initial render
+        updateUI();
+    </script>
+</body>
+</html>
